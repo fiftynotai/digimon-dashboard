@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --glow-red: 0 0 10px #ff3333, 0 0 20px rgba(255, 51, 51, 0.4);
+  --glow-blue: 0 0 10px #3399ff, 0 0 20px rgba(51, 153, 255, 0.4);
+  --glow-gold: 0 0 10px #ffaa00, 0 0 20px rgba(255, 170, 0, 0.4);
+  --glow-cyan: 0 0 10px #00ffcc, 0 0 20px rgba(0, 255, 204, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #0a0e1a;
+  color: #ffffff;
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  z-index: 9999;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a2035;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3399ff;
+}
+
+/* Neon text utilities */
+@layer utilities {
+  .text-glow-red {
+    text-shadow: var(--glow-red);
+  }
+  .text-glow-blue {
+    text-shadow: var(--glow-blue);
+  }
+  .text-glow-gold {
+    text-shadow: var(--glow-gold);
+  }
+  .text-glow-cyan {
+    text-shadow: var(--glow-cyan);
+  }
+}
+
+/* Hexagon clip path */
+@layer utilities {
+  .hex-clip {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+}
+
+/* Grid background pattern */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(51, 153, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 153, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
