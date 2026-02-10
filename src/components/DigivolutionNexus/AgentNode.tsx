@@ -9,167 +9,143 @@ interface AgentNodeProps {
 
 export const AgentNode = ({ agent, isCentral = false, onClick }: AgentNodeProps) => {
   const getColorClasses = () => {
-    const colorMap: Record<string, { border: string; glow: string; text: string }> = {
+    const colorMap: Record<string, { border: string; bg: string; text: string; glow: string }> = {
       red: {
-        border: 'border-red-500',
-        glow: 'shadow-[0_0_20px_rgba(239,68,68,0.5),0_0_40px_rgba(239,68,68,0.3)]',
-        text: 'text-red-400',
+        border: 'border-[#FF3366]',
+        bg: 'bg-gradient-to-b from-[#1a1525]/85 to-[#0a0f1e]/95',
+        text: 'text-[#FF3366]',
+        glow: 'shadow-[0_0_15px_rgba(255,51,102,0.3)]',
       },
       blue: {
-        border: 'border-cyan-500',
-        glow: 'shadow-[0_0_20px_rgba(6,182,212,0.5),0_0_40px_rgba(6,182,212,0.3)]',
-        text: 'text-cyan-400',
+        border: 'border-[#00D4FF]',
+        bg: 'bg-gradient-to-b from-[#152530]/85 to-[#0a0f1e]/95',
+        text: 'text-[#00D4FF]',
+        glow: 'shadow-[0_0_15px_rgba(0,212,255,0.3)]',
       },
       gold: {
-        border: 'border-amber-500',
-        glow: 'shadow-[0_0_20px_rgba(245,158,11,0.5),0_0_40px_rgba(245,158,11,0.3)]',
-        text: 'text-amber-400',
+        border: 'border-[#F5A623]',
+        bg: 'bg-gradient-to-b from-[#302520]/85 to-[#0a0f1e]/95',
+        text: 'text-[#F5A623]',
+        glow: 'shadow-[0_0_15px_rgba(245,166,35,0.3)]',
       },
       cyan: {
-        border: 'border-teal-400',
-        glow: 'shadow-[0_0_20px_rgba(45,212,191,0.5),0_0_40px_rgba(45,212,191,0.3)]',
-        text: 'text-teal-400',
+        border: 'border-[#00D4FF]',
+        bg: 'bg-gradient-to-b from-[#152530]/85 to-[#0a0f1e]/95',
+        text: 'text-[#00D4FF]',
+        glow: 'shadow-[0_0_15px_rgba(0,212,255,0.3)]',
       },
     };
     return colorMap[agent.color];
   };
 
   const classes = getColorClasses();
+  const width = isCentral ? 'w-[220px]' : 'w-[180px]';
+  const height = isCentral ? 'h-[160px]' : 'h-[120px]';
+  const borderWidth = isCentral ? 'border-3' : 'border-2';
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: isCentral ? 0.3 : 0 }}
-      whileHover={{ scale: 1.05, y: -2 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: isCentral ? 0.2 : 0 }}
+      whileHover={{ scale: 1.03, zIndex: 10 }}
       onClick={onClick}
       className={`
-        absolute bg-gradient-to-br from-[#0a1628] to-[#0f1f3a] 
-        ${classes.border} ${classes.glow} p-4 cursor-pointer
-        ${isCentral ? 'hex-clip w-56 h-56' : 'rounded-xl border-2'}
-        backdrop-blur-sm
+        absolute cursor-pointer
+        ${classes.bg} ${classes.border} ${borderWidth} ${classes.glow}
+        ${width} ${height}
       `}
       style={{
         left: `${agent.position.x}%`,
         top: `${agent.position.y}%`,
         transform: 'translate(-50%, -50%)',
+        // Hexagonal shape using clip-path
+        clipPath: 'polygon(20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%, 0% 50%)',
       }}
     >
-      {/* Glow ring for central nodes */}
+      {/* Inner glow overlay */}
+      <div
+        className="absolute inset-1 opacity-50"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%)',
+          clipPath: 'polygon(20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%, 0% 50%)',
+        }}
+      />
+
+      {/* Corner accent for central node */}
       {isCentral && (
         <div
-          className={`
-            absolute inset-0 ${classes.border} rounded-lg
-            animate-pulse opacity-30
-          `}
-          style={{ transform: 'scale(1.1)', filter: 'blur(8px)' }}
+          className="absolute top-0 left-0 w-3 h-3"
+          style={{
+            clipPath: 'polygon(0 0, 100% 0, 0 100%)',
+            backgroundColor: agent.color === 'red' ? '#FF3366' : agent.color === 'blue' ? '#00D4FF' : '#F5A623',
+          }}
         />
       )}
 
-      {/* Sprite area */}
-      <div className={`flex justify-center mb-3 ${isCentral ? 'mt-6' : ''}`}>
-        <div
-          className={`
-            relative ${isCentral ? 'w-24 h-24' : 'w-16 h-16'}
-            rounded-lg ${classes.border} bg-gradient-to-br 
-            from-[#0a1628] to-[#0f1f3a] flex items-center 
-            justify-center ${classes.glow}
-          `}
-        >
-          <span className={`text-${isCentral ? '5xl' : '3xl'} drop-shadow-lg`}>
-            {agent.sprite}
-          </span>
-          {/* HP bar on sprite */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-800">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${agent.hp}%` }}
-              transition={{ duration: 0.8 }}
-              className={`h-full ${
-                agent.hp > 60 ? 'bg-green-500' : agent.hp > 30 ? 'bg-amber-500' : 'bg-red-500'
-              }`}
-            />
-          </div>
-        </div>
+      {/* Sprite */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2">
+        <span className="text-4xl drop-shadow-lg">{agent.sprite}</span>
       </div>
 
-      {/* Name & Stage badges */}
-      <div className="text-center space-y-1">
-        <h3 className="font-bold text-white tracking-wide text-sm">
+      {/* Name */}
+      <div className="absolute bottom-14 left-0 right-0 text-center px-4">
+        <h3 className="font-bold text-white text-sm tracking-wide" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
           {agent.name}
         </h3>
-        <div className="flex gap-1 justify-center flex-wrap">
-          <span
-            className={`
-              text-[9px] font-bold px-2 py-0.5 rounded-full 
-              ${classes.border} ${classes.text} bg-opacity-20
-            `}
-          >
-            {agent.stage}
+      </div>
+
+      {/* Stage badges */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-1 px-2">
+        <span
+          className={`
+            text-[9px] font-bold px-2 py-0.5 rounded-sm
+            ${classes.text} bg-black/60
+          `}
+        >
+          {agent.stage}
+        </span>
+        {agent.trainingStage && (
+          <span className="text-[9px] font-bold px-2 py-0.5 rounded-sm bg-black/60 text-gray-300">
+            {agent.trainingStage}
           </span>
-          {agent.trainingStage && (
-            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">
-              {agent.trainingStage}
-            </span>
-          )}
+        )}
+      </div>
+
+      {/* Stats row at bottom */}
+      <div className="absolute bottom-2.5 left-3 right-3 flex justify-between items-center">
+        <div className="text-[9px] text-gray-400 font-mono">
+          {agent.runs.current}/{agent.runs.total}
+        </div>
+        <div className="flex gap-0.5">
+          {Array.from({ length: agent.maxEnergy }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-2 rounded-sm ${
+                i < agent.energy
+                  ? agent.color === 'red'
+                    ? 'bg-[#FF3366]'
+                    : agent.color === 'blue'
+                    ? 'bg-[#00D4FF]'
+                    : 'bg-[#F5A623]'
+                  : 'bg-gray-600'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Stats row */}
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="text-center">
-          <div className="text-[9px] text-gray-500 font-mono">RUNS</div>
-          <div className="text-xs font-mono font-bold text-white">
-            {agent.runs.current}/{agent.runs.total}
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="text-[9px] text-gray-500 font-mono">ENERGY</div>
-          <div className="flex gap-0.5 justify-center">
-            {Array.from({ length: agent.maxEnergy }).map((_, i) => (
-              <div
-                key={i}
-                className={`
-                  w-1.5 h-2 rounded-sm ${i < agent.energy ? classes.text : 'bg-gray-700'}
-                `}
-                style={i < agent.energy ? { textShadow: '0 0 8px currentColor' } : {}}
-              />
-            ))}
-          </div>
-        </div>
+      {/* HP bar */}
+      <div className="absolute bottom-0 left-3 right-3 h-1.5 bg-black/70 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${agent.hp}%` }}
+          transition={{ duration: 0.8 }}
+          className={`h-full ${
+            agent.hp > 60 ? 'bg-green-500' : agent.hp > 30 ? 'bg-amber-500' : 'bg-red-500'
+          }`}
+        />
       </div>
-
-      {/* Mini stat bars */}
-      {isCentral && (
-        <div className="mt-3 space-y-1.5">
-          <div>
-            <div className="flex justify-between text-[8px] text-gray-500 mb-0.5">
-              <span>STR</span>
-              <span className="text-amber-400">85</span>
-            </div>
-            <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '85%' }}
-                className="h-full bg-gradient-to-r from-amber-600 to-amber-400"
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between text-[8px] text-gray-500 mb-0.5">
-              <span>VIT</span>
-              <span className="text-green-400">72</span>
-            </div>
-            <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '72%' }}
-                className="h-full bg-gradient-to-r from-green-600 to-green-400"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 };

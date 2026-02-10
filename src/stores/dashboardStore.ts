@@ -10,7 +10,7 @@ interface DashboardStore extends DashboardState {
   incrementAgentRun: (agentId: string) => void;
 }
 
-// Updated mock data with better positioning
+// Updated mock data with proper positioning and colors from image analysis
 const mockAgents = [
   {
     id: '1',
@@ -22,8 +22,8 @@ const mockAgents = [
     energy: 3,
     maxEnergy: 5,
     hp: 92,
-    color: 'red' as const,
-    position: { x: 15, y: 25 },
+    color: 'blue' as const, // Cyan/teal for Rookie
+    position: { x: 20, y: 30 },
     connections: ['2'],
   },
   {
@@ -34,10 +34,10 @@ const mockAgents = [
     runs: { current: 7, total: 12 },
     energy: 4,
     maxEnergy: 5,
-    hp: 88,
-    color: 'gold' as const,
-    position: { x: 50, y: 50 },
-    connections: ['3', '4'],
+    hp: 100,
+    color: 'red' as const, // Red/crimson for central/active
+    position: { x: 50, y: 50 }, // Central position
+    connections: ['1', '3', '4'],
   },
   {
     id: '3',
@@ -48,8 +48,8 @@ const mockAgents = [
     energy: 2,
     maxEnergy: 5,
     hp: 78,
-    color: 'blue' as const,
-    position: { x: 85, y: 25 },
+    color: 'blue' as const, // Cyan/teal for Rookie
+    position: { x: 80, y: 30 },
     connections: ['2'],
   },
   {
@@ -61,9 +61,9 @@ const mockAgents = [
     energy: 5,
     maxEnergy: 5,
     hp: 100,
-    color: 'cyan' as const,
-    position: { x: 50, y: 85 },
-    connections: [],
+    color: 'red' as const, // Red/crimson for Mega
+    position: { x: 50, y: 80 },
+    connections: ['2'],
   },
 ];
 
@@ -84,9 +84,9 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   tokens: {
     total: 185200000,
     breakdown: [
-      { label: 'Input', percent: 35, color: '#ef4444' },
-      { label: 'Output', percent: 45, color: '#f59e0b' },
-      { label: 'System', percent: 20, color: '#06b6d4' },
+      { label: 'Input', percent: 35, color: '#FF3366' },
+      { label: 'Output', percent: 45, color: '#F5A623' },
+      { label: 'System', percent: 20, color: '#00D4FF' },
     ],
   },
   costEstimate: {
