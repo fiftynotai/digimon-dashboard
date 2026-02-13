@@ -4,76 +4,158 @@ import { TokenBreakdown } from './Sidebar/TokenBreakdown';
 import { CostEstimate } from './Sidebar/CostEstimate';
 import { BattleLog } from './Sidebar/BattleLog';
 import { Cpu } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const DashboardShell = () => {
   return (
     <div
-      className="min-h-screen p-4"
+      className="min-h-screen p-6"
       style={{
-        background: 'radial-gradient(ellipse at center, #122B45 0%, #070D18 100%)',
+        background: '#050a14',
+        backgroundImage: `
+          radial-gradient(ellipse at 20% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 80%, rgba(255, 170, 0, 0.08) 0%, transparent 50%)
+        `,
       }}
     >
-      {/* Digital noise texture overlay */}
+      {/* Digital noise texture overlay - scanlines */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E")`,
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px)',
+        }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-5"
+        style={{
+          backgroundImage: `
+            linear-gradient(0deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
         }}
       />
 
       {/* Main container */}
-      <div className="max-w-[1600px] mx-auto relative">
+      <div className="max-w-[1600px] mx-auto relative z-10">
         {/* Header */}
-        <div className="relative flex items-center gap-4 mb-4 pb-3 border-b border-[#00D4FF]">
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative flex items-center gap-4 mb-6 pb-4"
+          style={{
+            borderBottom: '2px solid #00f0ff',
+            boxShadow: '0 0 20px rgba(0, 240, 255, 0.2)',
+          }}
+        >
           {/* Orange crest icon */}
-          <div
-            className="w-12 h-12 rounded-lg flex items-center justify-center"
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.7, type: 'spring' }}
+            className="relative w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #FF8C00, #FF6B00)',
-              boxShadow: '0 0 15px rgba(255,140,0,0.4)',
+              background: 'linear-gradient(135deg, #ffaa00, #ff6b00)',
+              boxShadow: '0 0 25px rgba(255, 170, 0, 0.5), 0 0 40px rgba(255, 107, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.2)',
             }}
           >
-            <Cpu className="w-6 h-6 text-white" />
-          </div>
+            <Cpu className="w-7 h-7 text-white" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 170, 0, 0.8))' }} />
+          </motion.div>
+
           <div className="flex-1">
             <h1
-              className="text-3xl font-bold text-white tracking-wider"
+              className="text-4xl font-bold text-white tracking-widest uppercase"
               style={{
-                textShadow: '0 0 10px #00D4FF, 0 0 20px #0088AA',
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-                fontWeight: 700,
+                fontFamily: 'Orbitron, sans-serif',
+                textShadow: '0 0 15px #00f0ff, 0 0 30px rgba(0, 240, 255, 0.4), 0 0 50px rgba(0, 240, 255, 0.2)',
+                letterSpacing: '3px',
+              }}
+            >
+              DIGIMON AI AGENT
+            </h1>
+            <h2
+              className="text-2xl font-bold text-white tracking-widest uppercase mt-1"
+              style={{
+                fontFamily: 'Orbitron, sans-serif',
+                textShadow: '0 0 10px #ffaa00, 0 0 20px rgba(255, 170, 0, 0.3)',
                 letterSpacing: '2px',
               }}
             >
-              DIGIMON AI AGENT EVOLUTION DASHBOARD
-            </h1>
+              EVOLUTION DASHBOARD
+            </h2>
           </div>
-        </div>
+
+          {/* Decorative corner lines */}
+          <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none">
+            <div
+              className="absolute top-0 right-0 w-12 h-1"
+              style={{ background: '#ffaa00', boxShadow: '0 0 10px #ffaa00' }}
+            />
+            <div
+              className="absolute top-0 right-0 w-1 h-12"
+              style={{ background: '#ffaa00', boxShadow: '0 0 10px #ffaa00' }}
+            />
+          </div>
+        </motion.div>
 
         {/* Status Bar */}
-        <StatusBar />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <StatusBar />
+        </motion.div>
 
         {/* Main Content Grid - 75% main, 25% sidebar */}
-        <div className="grid grid-cols-[3fr_1fr] gap-5 mt-5 relative">
+        <div className="grid grid-cols-[3fr_1fr] gap-6 mt-6 relative">
           {/* Left: Digivolution Nexus */}
-          <div className="h-[600px]">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="h-[700px]"
+          >
             <DigivolutionNexus />
-          </div>
+          </motion.div>
 
           {/* Right: Sidebar */}
-          <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-5"
+          >
             <TokenBreakdown />
             <CostEstimate />
             <BattleLog />
-          </div>
+          </motion.div>
         </div>
 
         {/* Footer */}
-        <div className="mt-6 text-center py-3 border-t border-[#00D4FF]/30">
-          <p className="text-xs text-gray-500 font-mono tracking-wider">
-            SYSTEM ACTIVE | V1.0 | AI AGENT EVOLUTION MONITOR
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-8 text-center py-4"
+          style={{
+            borderTop: '1px solid #00f0ff44',
+          }}
+        >
+          <p
+            className="text-xs uppercase tracking-widest font-mono"
+            style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              color: '#6b7280',
+              textShadow: '0 0 6px rgba(0, 240, 255, 0.3)',
+            }}
+          >
+            ◆ SYSTEM ACTIVE | V1.0 | AI AGENT EVOLUTION MONITOR ◆
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
